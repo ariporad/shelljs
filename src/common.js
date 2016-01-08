@@ -1,5 +1,6 @@
 var os = require('os');
 var fs = require('fs');
+var glob = require('glob');
 var _ls = require('./ls');
 
 // Module globals
@@ -85,38 +86,14 @@ function parseOptions(str, map) {
 }
 exports.parseOptions = parseOptions;
 
-// Expands wildcards with matching (ie. existing) file names.
-// For example:
-//   expand(['file*.js']) = ['file1.js', 'file2.js', ...]
-//   (if the files 'file1.js', 'file2.js', etc, exist in the current dir)
+// Just a thin wrapper around glob.sync, to allow passing in an array.
 function expand(list) {
-  var expanded = [];
-  list.forEach(function(listEl) {
-    // Wildcard present on directory names ?
-    if(listEl.search(/\*[^\/]*\//) > -1 || listEl.search(/\*\*[^\/]*\//) > -1) {
-      var match = listEl.match(/^([^*]+\/|)(.*)/);
-      var root = match[1];
-      var rest = match[2];
-      var restRegex = rest.replace(/\*\*/g, ".*").replace(/\*/g, "[^\\/]*");
-      restRegex = new RegExp(restRegex);
-      
-      _ls('-R', root).filter(function (e) {
-        return restRegex.test(e);
-      }).forEach(function(file) {
-        expanded.push(file);
-      });
-    }
-    // Wildcard present on file names ?
-    else if (listEl.search(/\*/) > -1) {
-      _ls('', listEl).forEach(function(file) {
-        expanded.push(file);
-      });
-    } else {
-      expanded.push(listEl);
-    }
-  });
-  return expanded;
+  if (!Array.isArray(list)) list = [list];
+  return list.reduce(function (files, pattern) {
+    return files.concat(glob.sync(pattern));
+  }, []);
 }
+
 exports.expand = expand;
 
 // Normalizes _unlinkSync() across platforms to match Unix behavior, i.e.
