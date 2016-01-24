@@ -146,6 +146,7 @@ exports.extend = extend;
 
 // Common wrapper for all Unix-like commands
 function wrap(cmd, fn, options) {
+  console.log(fn.toString().split('\n')[0]);
   return function() {
     var retValue = null;
 

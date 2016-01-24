@@ -1,0 +1,22 @@
+function _cd(options, dir) {
+function _pwd(options) {
+function _ls(options, paths) {
+function _find(options, paths) {
+function _cp(options, sources, dest) {
+function _rm(options, files) {
+function _mv(options, sources, dest) {
+function _mkdir(options, dirs) {
+function _test(options, path) {
+function _cat(options, files) {
+function _to(options, file) {
+function _toEnd(options, file) {
+function _sed(options, regex, replacement, file) {
+function _grep(options, regex, files) {
+function _which(options, cmd) {
+function _dirs(options, index) {
+function _pushd(options, dir) {
+function _popd(options, index) {
+function _ln(options, source, dest) {
+function _exec(command, options, callback) {
+function _chmod(options, mode, filePattern) {
+function _tempDir() {
